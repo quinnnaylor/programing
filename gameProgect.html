@@ -1,0 +1,83 @@
+<!doctype html>
+
+<head>
+    <title>game</title>
+</head>
+
+<body>
+    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <script>
+        var canvas, canvasContext;
+
+        window.onload = function() {
+            canvas = document.getElementById('gameCanvas');
+            canvasContext = canvas.getContext('2d');
+
+            document.addEventListener
+
+            setInterval(mainloop, 1000 / 50);
+        }
+
+        var shooterXpos = 0;
+        var shooterYpos = 0;
+        var shooterXspeed = 8;
+        var shooterYspeed = 3;
+        var shooterSize = 30;
+
+
+        var startingPos = true;
+
+        function mainloop() {
+            colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
+            colorRect(shooterXpos, shooterYpos, shooterSize, shooterSize, 'yellow');
+            movement();
+
+            if (startingPos) {
+                startPos();
+                startingPos = false;
+            }
+        }
+
+        function colorRect(x, y, w, h, c) {
+            canvasContext.fillStyle = c;
+            canvasContext.fillRect(x, y, w, h);
+        }
+        
+        function keyPressed(evt){
+            console.log(evt.keyCode);
+        }
+        
+        function keyReleased(evt){
+            console.log(evt.keyCode);
+        }
+
+
+        function startPos() { //starting pos
+            shooterXpos = canvas.width / 2 - (shooterSize / 2);
+            shooterYpos = canvas.height - shooterSize * 1.2;
+        }
+
+        function movement() {
+            shooterXpos = shooterXpos + shooterXspeed;
+            shooterYpos = shooterYpos + shooterYspeed;
+
+
+            if (shooterXpos > 400 - shooterSize) { //right eadge bounce
+                shooterXspeed = shooterXspeed * -1;
+            }
+
+            if (shooterXpos < 0) { //left eadge bounce
+                shooterXspeed = shooterXspeed * -1;
+            }
+
+            if (shooterYpos > 400 - shooterSize) { //top bounce
+                shooterYspeed = shooterYspeed * -1;
+            }
+
+            if (shooterYpos < 0) { //bottom bounce
+                shooterYspeed = shooterYspeed * -1;
+            }
+        }
+
+    </script>
+</body>
