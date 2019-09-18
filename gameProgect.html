@@ -23,13 +23,17 @@
         var shooterXspeed = 8;
         var shooterYspeed = 3;
         var shooterSize = 30;
+        
+        var bug = new Image();
+        bug.src = 'images/player.png';
 
 
         var startingPos = true;
 
         function mainloop() {
             colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
-            colorRect(shooterXpos, shooterYpos, shooterSize, shooterSize, 'yellow');
+//            colorRect(shooterXpos, shooterYpos, shooterSize, shooterSize, 'yellow');
+            drawImg(bug,shooterXpos,shooterYpos,shooterSize,shooterSize);
             movement();
 
             if (startingPos) {
@@ -38,10 +42,6 @@
             }
         }
 
-        function colorRect(x, y, w, h, c) {
-            canvasContext.fillStyle = c;
-            canvasContext.fillRect(x, y, w, h);
-        }
         
         function keyPressed(evt){
             console.log(evt.keyCode);
@@ -79,5 +79,13 @@
             }
         }
 
+        function colorRect(x, y, w, h, c) {
+            canvasContext.fillStyle = c;
+            canvasContext.fillRect(x, y, w, h);
+        }
+        
+        function drawImg(img, x,y,w,h){
+            canvasContext.drawImage(img, x,y,w,h);
+        }
     </script>
 </body>
