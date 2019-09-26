@@ -104,22 +104,22 @@
         }
 
         function shooterMove() {
-            if (rightKeyPressed) {
+            if (rightKeyPressed && shooterXpos < canvas.width - shooterSize) {
                 shooterXpos += shooterXspeed;
             }
             
-            if (leftKeyPressed) {
+            if (leftKeyPressed && shooterXpos > 0) {
                 shooterXpos -= shooterXspeed;
             }
 
-            //shooter movement
-            if (shooterXpos > canvas.width - shooterSize) { //right eadge bounce
-                shooterXspeed = shooterXspeed * 0;
-            }
+//            //shooter movement
+//            if () { //right eadge bounce
+//                shooterXspeed = shooterXspeed * 0;
+//            }
 
-            if (shooterXpos < 0) { //left eadge bounce
-                shooterXspeed = shooterXspeed * 0;
-            }
+            //if (shooterXpos < 0) { //left eadge bounce
+             //   shooterXspeed = shooterXspeed * 0;
+            //}
 
         }
 
