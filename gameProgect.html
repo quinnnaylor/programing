@@ -1,11 +1,11 @@
 <!doctype html>
 
 <head>
-    <title>game</title>
+    <title>centipede</title>
 </head>
 
 <body>
-    <canvas id="gameCanvas" width="400" height="400"></canvas>
+    <canvas id="gameCanvas" width="600" height="400"></canvas>
     <script>
         var canvas, canvasContext;
 
@@ -13,7 +13,8 @@
             canvas = document.getElementById('gameCanvas');
             canvasContext = canvas.getContext('2d');
 
-            document.addEventListener
+            document.addEventListener('keydown', keyPressed);
+            document.addEventListener('keyup', keyReleased);
 
             setInterval(mainloop, 1000 / 50);
         }
@@ -23,69 +24,114 @@
         var shooterXspeed = 8;
         var shooterYspeed = 3;
         var shooterSize = 30;
-        
+
+        const LEFT_KEY = 37;
+        const RIGHT_KEY = 39;
+
+        var bugXpos = 0;
+        var bugYpos = 0;
+        var bugXspeed = 8;
+        var bugYspeed = 3;
+        var bugSize = 30;
+
         var bug = new Image();
-        bug.src = 'images/player.png';
+        bug.src = 'images/bug.png';
 
+        var shooter = new Image();
+        shooter.src = 'images/shooter.png'
 
-        var startingPos = true;
+        var shooterStartingPos = true;
+        var bugStartingPos = true;
+
+        var leftKeyPressed = false;
+        var rightKeyPressed = false;
 
         function mainloop() {
             colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
-//            colorRect(shooterXpos, shooterYpos, shooterSize, shooterSize, 'yellow');
-            drawImg(bug,shooterXpos,shooterYpos,shooterSize,shooterSize);
-            movement();
 
-            if (startingPos) {
-                startPos();
-                startingPos = false;
+            drawImg(shooter, shooterXpos, shooterYpos, shooterSize, shooterSize + 20);
+
+            drawImg(bug, bugXpos, bugYpos, bugSize, bugSize);
+
+            shooterMove();
+            bugMovement();
+
+            if (bugStartingPos) {
+                bugStartPos();
+                bugStartingPos = false;
+            }
+
+            if (shooterStartingPos) {
+                shooterStartPos();
+                shooterStartingPos = false;
             }
         }
 
-        
-        function keyPressed(evt){
+
+        function keyPressed(evt) {
             console.log(evt.keyCode);
-        }
-        
-        function keyReleased(evt){
-            console.log(evt.keyCode);
+            if (evt.keyCode == LEFT_KEY) {
+                leftKeyPressed = true;
+            }
+            if (evt.keyCode == RIGHT_KEY) {
+                rightKeyPressed = true;
+            }
         }
 
+        function keyReleased(evt) {
+            console.log(evt.keyCode);
+            if (evt.keyCode == LEFT_KEY) {
+                leftKeyPressed = false;
+            }
+            if (evt.keyCode == RIGHT_KEY) {
+                rightKeyPressed = false;
+            }
+        }
 
-        function startPos() { //starting pos
+        function bugStartPos() { //bug starting pos
+            bugXpos = Math.floor(Math.random);
+            bugYpos = canvas.height - bugSize;
+        }
+
+        function shooterStartPos() { //shooter starting pos
             shooterXpos = canvas.width / 2 - (shooterSize / 2);
             shooterYpos = canvas.height - shooterSize * 1.2;
         }
 
-        function movement() {
-            shooterXpos = shooterXpos + shooterXspeed;
-            shooterYpos = shooterYpos + shooterYspeed;
+        function bugMovement() { //bug movement
+            bugXpos = bugXpos + bugXspeed;
+            bugYpos = bugYpos + bugYspeed;
+        }
 
+        function shooterMove() {
+            if (rightKeyPressed) {
+                shooterXpos += shooterXspeed;
+            }
+            
+            if (leftKeyPressed) {
+                shooterXpos -= shooterXspeed;
+            }
 
-            if (shooterXpos > 400 - shooterSize) { //right eadge bounce
-                shooterXspeed = shooterXspeed * -1;
+            //shooter movement
+            if (shooterXpos > canvas.width - shooterSize) { //right eadge bounce
+                shooterXspeed = shooterXspeed * 0;
             }
 
             if (shooterXpos < 0) { //left eadge bounce
-                shooterXspeed = shooterXspeed * -1;
+                shooterXspeed = shooterXspeed * 0;
             }
 
-            if (shooterYpos > 400 - shooterSize) { //top bounce
-                shooterYspeed = shooterYspeed * -1;
-            }
+        }
 
-            if (shooterYpos < 0) { //bottom bounce
-                shooterYspeed = shooterYspeed * -1;
-            }
+
+        function drawImg(img, x, y, w, h) {
+            canvasContext.drawImage(img, x, y, w, h);
         }
 
         function colorRect(x, y, w, h, c) {
             canvasContext.fillStyle = c;
             canvasContext.fillRect(x, y, w, h);
         }
-        
-        function drawImg(img, x,y,w,h){
-            canvasContext.drawImage(img, x,y,w,h);
-        }
+
     </script>
 </body>
