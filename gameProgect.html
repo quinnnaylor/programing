@@ -1,7 +1,7 @@
 <!doctype html>
 
 <head>
-    <title>centipede</title>
+    <title>barrel shooter</title>
 </head>
 
 <body>
@@ -19,11 +19,34 @@
             setInterval(mainloop, 1000 / 50);
         }
 
+        var difficulty = '';
+        var pass = false;
+
+        while (pass == false) {
+            difficulty = prompt('how hard do you want the game?', 'hard or easy?')
+
+            if (difficulty.toLowerCase() == 'easy' || difficulty.toLowerCase() == 'hard') {
+                pass = true;
+            }
+        }
+
+
+        if (difficulty == 'easy') {
+            bugYspeed = bugYspeed / 2;
+        } else {
+            bugYspeed = 600 //difficulty speed
+        }
+
+        var username = '';
+        while (username == '' || username == 'null') {
+            username = prompt('whats your name?') || ''; // your name please
+        }
+
         var shooterXpos = 0;
         var shooterYpos = 0;
-        var shooterXspeed = 8;
+        var shooterXspeed = 6;
         var shooterYspeed = 3;
-        var shooterSize = 30;
+        const shooterSize = 40;
 
         const LEFT_KEY = 37;
         const RIGHT_KEY = 39;
@@ -32,13 +55,16 @@
         var bugYpos = 0;
         var bugXspeed = 8;
         var bugYspeed = 3;
-        var bugSize = 30;
+        const bugSize = 5;
 
-        var bug = new Image();
-        bug.src = 'images/bug.png';
+        const bug = new Image();
+        bug.src = 'images/barrel.png'; //its not a bug anymore its a barell
 
-        var shooter = new Image();
+        const shooter = new Image();
         shooter.src = 'images/shooter.png'
+
+        const bg = new Image();
+        bg.src = 'images/treeLine.png';
 
         var shooterStartingPos = true;
         var bugStartingPos = true;
@@ -47,8 +73,8 @@
         var rightKeyPressed = false;
 
         function mainloop() {
-            colorRect(0, 0, canvas.width, canvas.height, 'black'); // bg
-
+            //            colorRect(0, 0, canvas.width, canvas.height, 'images/treeLine.png'); 
+            drawImg(bg, 0, 0, canvas.width, canvas.height); // bg
             drawImg(shooter, shooterXpos, shooterYpos, shooterSize, shooterSize + 20);
 
             drawImg(bug, bugXpos, bugYpos, bugSize, bugSize);
@@ -60,16 +86,15 @@
                 bugStartPos();
                 bugStartingPos = false;
             }
-
+            // starting stuff
             if (shooterStartingPos) {
                 shooterStartPos();
                 shooterStartingPos = false;
             }
         }
 
-
         function keyPressed(evt) {
-            console.log(evt.keyCode);
+            //            console.log(evt.keyCode);
             if (evt.keyCode == LEFT_KEY) {
                 leftKeyPressed = true;
             }
@@ -104,23 +129,13 @@
         }
 
         function shooterMove() {
-            if (rightKeyPressed && shooterXpos < canvas.width - shooterSize) {
+            if (rightKeyPressed && shooterXpos < canvas.width - shooterSize) { //movement for shooter
                 shooterXpos += shooterXspeed;
             }
-            
+
             if (leftKeyPressed && shooterXpos > 0) {
                 shooterXpos -= shooterXspeed;
             }
-
-//            //shooter movement
-//            if () { //right eadge bounce
-//                shooterXspeed = shooterXspeed * 0;
-//            }
-
-            //if (shooterXpos < 0) { //left eadge bounce
-             //   shooterXspeed = shooterXspeed * 0;
-            //}
-
         }
 
 
