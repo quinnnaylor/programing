@@ -21,7 +21,6 @@
 
         var difficulty = '';
         var pass = false;
-
         while (pass == false) {
             difficulty = prompt('how hard do you want the game?', 'hard or easy?')
 
@@ -30,32 +29,37 @@
             }
         }
 
-
         if (difficulty == 'easy') {
             bugYspeed = bugYspeed / 2;
         } else {
-            bugYspeed = 600 //difficulty speed
-        }
+            bugYspeed = 600; //difficulty speed
+        } //end of game dificulty code
 
         var username = '';
         while (username == '' || username == 'null') {
             username = prompt('whats your name?') || ''; // your name please
-        }
+        } // end of username code
 
         var shooterXpos = 0;
         var shooterYpos = 0;
         var shooterXspeed = 6;
         var shooterYspeed = 3;
-        const shooterSize = 40;
+        const SHOOTER_SIZE = 45;
+        //shooter variables
 
         const LEFT_KEY = 37;
         const RIGHT_KEY = 39;
+        const SPACE_KEY = 32;
+        //movement and shoot const
 
         var bugXpos = 0;
         var bugYpos = 0;
         var bugXspeed = 8;
         var bugYspeed = 3;
-        const bugSize = 5;
+        const BUG_SIZE = 50;
+        //bug/ barrell vars
+
+
 
         const bug = new Image();
         bug.src = 'images/barrel.png'; //its not a bug anymore its a barell
@@ -65,19 +69,20 @@
 
         const bg = new Image();
         bg.src = 'images/treeLine.png';
+        //images for everything
 
         var shooterStartingPos = true;
         var bugStartingPos = true;
+        //start pos var
 
         var leftKeyPressed = false;
         var rightKeyPressed = false;
 
         function mainloop() {
-            //            colorRect(0, 0, canvas.width, canvas.height, 'images/treeLine.png'); 
             drawImg(bg, 0, 0, canvas.width, canvas.height); // bg
-            drawImg(shooter, shooterXpos, shooterYpos, shooterSize, shooterSize + 20);
+            drawImg(shooter, shooterXpos, shooterYpos, SHOOTER_SIZE, SHOOTER_SIZE + 20);
 
-            drawImg(bug, bugXpos, bugYpos, bugSize, bugSize);
+            drawImg(bug, bugXpos, bugYpos, BUG_SIZE, BUG_SIZE);
 
             shooterMove();
             bugMovement();
@@ -101,7 +106,7 @@
             if (evt.keyCode == RIGHT_KEY) {
                 rightKeyPressed = true;
             }
-        }
+        } //end of key pressed code
 
         function keyReleased(evt) {
             console.log(evt.keyCode);
@@ -111,33 +116,43 @@
             if (evt.keyCode == RIGHT_KEY) {
                 rightKeyPressed = false;
             }
-        }
+        } //end of keyt released code
 
         function bugStartPos() { //bug starting pos
-            bugXpos = Math.floor(Math.random);
-            bugYpos = canvas.height - bugSize;
-        }
+            bugXpos = Math.floor(Math.random() * (canvas.width - 0) + 0);
+            bugYpos = canvas.height - canvas.height - BUG_SIZE;
+        } // end of bug start pos code
 
         function shooterStartPos() { //shooter starting pos
-            shooterXpos = canvas.width / 2 - (shooterSize / 2);
-            shooterYpos = canvas.height - shooterSize * 1.2;
-        }
+            shooterXpos = canvas.width / 2 - (SHOOTER_SIZE / 2);
+            shooterYpos = canvas.height - SHOOTER_SIZE * 1.2;
+        } //end of shooter start pos code 
 
         function bugMovement() { //bug movement
-            bugXpos = bugXpos + bugXspeed;
             bugYpos = bugYpos + bugYspeed;
+
+            if (bugYpos > canvas.height) { // get bricks once leave bottom screen to go the top the screen
+                bugYpos = 0 - BUG_SIZE; // set to top of screen
+                bugXpos = Math.floor(Math.random() * ((canvas.width - BUG_SIZE) - 0) + 0);
+                // score++;
+            }
+            if (bugYpos + BUG_SIZE > shooterYpos && bugYpos < shooterYpos < SHOOTER_SIZE && bugXpos + BUG_SIZE > shooterXpos && bugXpos < shooterXpos + SHOOTER_SIZE) {
+                shooterXpos = 0;
+                shooterYpos = canvas.height - SHOOTER_SIZE;
+                score++;
+                console.log('score:' + score)
+            }
         }
 
         function shooterMove() {
-            if (rightKeyPressed && shooterXpos < canvas.width - shooterSize) { //movement for shooter
+            if (rightKeyPressed && shooterXpos < canvas.width - SHOOTER_SIZE) { //movement for shooter
                 shooterXpos += shooterXspeed;
             }
 
             if (leftKeyPressed && shooterXpos > 0) {
                 shooterXpos -= shooterXspeed;
             }
-        }
-
+        } // end of shooter movement code
 
         function drawImg(img, x, y, w, h) {
             canvasContext.drawImage(img, x, y, w, h);
