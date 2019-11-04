@@ -6,6 +6,7 @@
 
 <body>
     <canvas id="gameCanvas" width="600" height="400"></canvas>
+    <p>use left and right arow keys to use and space to shoot</p>
     <script>
         var canvas, canvasContext;
 
@@ -28,140 +29,217 @@
                 pass = true;
             }
         }
+            var bugYspeed = 3;
 
         if (difficulty == 'easy') {
-            bugYspeed = bugYspeed / 2;
+            bugYspeed = 3;
         } else {
-            bugYspeed = 600; //difficulty speed
+            bugYspeed = 6; //difficulty speed
         } //end of game dificulty code
 
         var username = '';
         while (username == '' || username == 'null') {
-            username = prompt('whats your name?') || ''; // your name please
-        } // end of username code
-
-        var shooterXpos = 0;
-        var shooterYpos = 0;
-        var shooterXspeed = 6;
-        var shooterYspeed = 3;
-        const SHOOTER_SIZE = 45;
-        //shooter variables
-
-        const LEFT_KEY = 37;
-        const RIGHT_KEY = 39;
-        const SPACE_KEY = 32;
-        //movement and shoot const
-
-        var bugXpos = 0;
-        var bugYpos = 0;
-        var bugXspeed = 8;
-        var bugYspeed = 3;
-        const BUG_SIZE = 50;
-        //bug/ barrell vars
-
-
-
-        const bug = new Image();
-        bug.src = 'images/barrel.png'; //its not a bug anymore its a barell
-
-        const shooter = new Image();
-        shooter.src = 'images/shooter.png'
-
-        const bg = new Image();
-        bg.src = 'images/treeLine.png';
-        //images for everything
-
-        var shooterStartingPos = true;
-        var bugStartingPos = true;
-        //start pos var
-
-        var leftKeyPressed = false;
-        var rightKeyPressed = false;
-
-        function mainloop() {
-            drawImg(bg, 0, 0, canvas.width, canvas.height); // bg
-            drawImg(shooter, shooterXpos, shooterYpos, SHOOTER_SIZE, SHOOTER_SIZE + 20);
-
-            drawImg(bug, bugXpos, bugYpos, BUG_SIZE, BUG_SIZE);
-
-            shooterMove();
-            bugMovement();
-
-            if (bugStartingPos) {
-                bugStartPos();
-                bugStartingPos = false;
-            }
-            // starting stuff
-            if (shooterStartingPos) {
-                shooterStartPos();
-                shooterStartingPos = false;
-            }
+            username = prompt('whats your name?') || ''; // your name please        } // end of username code
         }
+            var shooterXpos = 0;
+            var shooterYpos = 0;
+            var shooterXspeed = 6;
+            var shooterYspeed = 3;
+            const SHOOTER_SIZE = 45;
+            //shooter variables
 
-        function keyPressed(evt) {
-            //            console.log(evt.keyCode);
-            if (evt.keyCode == LEFT_KEY) {
-                leftKeyPressed = true;
-            }
-            if (evt.keyCode == RIGHT_KEY) {
-                rightKeyPressed = true;
-            }
-        } //end of key pressed code
+            const LEFT_KEY = 37;
+            const RIGHT_KEY = 39;
+            const SPACE_KEY = 32;
+            //movement and shoot const
 
-        function keyReleased(evt) {
-            console.log(evt.keyCode);
-            if (evt.keyCode == LEFT_KEY) {
-                leftKeyPressed = false;
-            }
-            if (evt.keyCode == RIGHT_KEY) {
-                rightKeyPressed = false;
-            }
-        } //end of keyt released code
+            var bugXpos = 0;
+            var bugYpos = 0;
+            var bugXspeed = 8;
+            const BUG_SIZE = 50;
+            //bug/ barrell vars
 
-        function bugStartPos() { //bug starting pos
-            bugXpos = Math.floor(Math.random() * (canvas.width - 0) + 0);
-            bugYpos = canvas.height - canvas.height - BUG_SIZE;
-        } // end of bug start pos code
+            var bulletXpos = 0;
+            var bulletYpos = 0;
+            var bulletYspeed = 8;
+            var bulletSize = 20;
+            // bullet vars
 
-        function shooterStartPos() { //shooter starting pos
-            shooterXpos = canvas.width / 2 - (SHOOTER_SIZE / 2);
-            shooterYpos = canvas.height - SHOOTER_SIZE * 1.2;
-        } //end of shooter start pos code 
+            const bullet = new Image();
+            bullet.src = 'images/bullet.png'
 
-        function bugMovement() { //bug movement
-            bugYpos = bugYpos + bugYspeed;
+            const bug = new Image();
+            bug.src = 'images/barrel.png'; //its not a bug anymore its a barell
 
-            if (bugYpos > canvas.height) { // get bricks once leave bottom screen to go the top the screen
-                bugYpos = 0 - BUG_SIZE; // set to top of screen
-                bugXpos = Math.floor(Math.random() * ((canvas.width - BUG_SIZE) - 0) + 0);
-                // score++;
-            }
-            if (bugYpos + BUG_SIZE > shooterYpos && bugYpos < shooterYpos < SHOOTER_SIZE && bugXpos + BUG_SIZE > shooterXpos && bugXpos < shooterXpos + SHOOTER_SIZE) {
-                shooterXpos = 0;
-                shooterYpos = canvas.height - SHOOTER_SIZE;
-                score++;
-                console.log('score:' + score)
-            }
-        }
+            const shooter = new Image();
+            shooter.src = 'images/shooter.png'
 
-        function shooterMove() {
-            if (rightKeyPressed && shooterXpos < canvas.width - SHOOTER_SIZE) { //movement for shooter
-                shooterXpos += shooterXspeed;
-            }
+            const bg = new Image();
+            bg.src = 'images/treeLine.png';
+            //images for everything
 
-            if (leftKeyPressed && shooterXpos > 0) {
-                shooterXpos -= shooterXspeed;
-            }
-        } // end of shooter movement code
+            var shooterStartingPos = true;
+            var bugStartingPos = true;
+            var bulletStartingPos =  true;
+            //start pos var
 
-        function drawImg(img, x, y, w, h) {
-            canvasContext.drawImage(img, x, y, w, h);
-        }
+            var spaceKeyPressed = false;
+            var leftKeyPressed = false;
+            var rightKeyPressed = false;
+            // key pressed vars
 
-        function colorRect(x, y, w, h, c) {
-            canvasContext.fillStyle = c;
-            canvasContext.fillRect(x, y, w, h);
-        }
+            var score = 0;
+            var health = 6;
+            var gameRun = true;
+            // score and health vars and the game run
+
+
+            function mainloop() {
+                if (gameRun) {
+
+                    drawImg(bg, 0, 0, canvas.width, canvas.height); // bg
+                    
+                    drawImg(bullet, bulletXpos, bulletYpos, bulletSize, bulletSize);
+                    
+                    drawImg(shooter, shooterXpos, shooterYpos, SHOOTER_SIZE, SHOOTER_SIZE + 20);
+
+                    drawImg(bug, bugXpos, bugYpos, BUG_SIZE, BUG_SIZE);
+
+                    colorText('score:' + score, 5, 20, '20px Arial', 'white')
+                    colorText('health:' + health, canvas.width - 90, 20, '20px Arial', 'black')
+
+                    shooterMove();
+                    bugMovement();
+                    bulletMove();
+                    
+                    if (bulletStartingPos) {
+                        bugStartPos();
+                        bulletStartPos = false;
+                    }
+                    
+                    if (bugStartingPos) {
+                        bugStartPos();
+                        bugStartingPos = false;
+                    }
+                    // starting stuff
+                    if (shooterStartingPos) {
+                        shooterStartPos();
+                        shooterStartingPos = false;
+                    }
+                    if (health <= 0) {
+                        gameRun = false;
+                    } // game ends
+
+                } else {
+                    drawImg(bg, 0, 0, canvas.width, canvas.height); // bg
+                    colorText(username + ' your score was ' + score, 5, canvas.height / 2, '25px Arial', 'white')// the end screen
+                } //if you die game ends
+            }//main loop func end     runs the game and finishes it
+
+            function keyPressed(evt) {
+                //            console.log(evt.keyCode);
+                if (evt.keyCode == SPACE_KEY) {
+                    shot = true;
+                }
+
+                if (evt.keyCode == LEFT_KEY) {
+                    leftKeyPressed = true;
+                }
+
+                if (evt.keyCode == RIGHT_KEY) {
+                    rightKeyPressed = true;
+                }
+            } //end of key pressed code       makes it so pressing a key works
+
+            function keyReleased(evt) {
+
+                if (evt.keyCode == LEFT_KEY) {
+                    leftKeyPressed = false;
+                }
+                if (evt.keyCode == RIGHT_KEY) {
+                    rightKeyPressed = false;
+                }
+                if (evt.keyCode == SPACE_KEY) {
+                    shot = false;
+                }
+            } //end of keyt released code          makes it so releasing a key stops the key pressed func
+
+            function bugStartPos() { //bug starting pos
+                bugXpos = Math.floor(Math.random() * (canvas.width - 0) + 0);
+                bugYpos = canvas.height - canvas.height - BUG_SIZE;
+            } // end of bug start pos code           where the barrel starts
+
+            function shooterStartPos() { //shooter starting pos
+                shooterXpos = canvas.width / 2 - (SHOOTER_SIZE / 2);
+                shooterYpos = canvas.height - SHOOTER_SIZE * 1.2;
+            } //end of shooter start pos code         shooters start pos
+        
+            function bulletStartPos(){
+                bulletXpos = canvas.width - canvas.width - bulletSize;
+                bulletYpos = canvas.height - canvas.height - bulletSize;
+            } // end of bullet start pos code         bullets stat pos
+
+            function bugMovement() { //bug movement
+                bugYpos = bugYpos + bugYspeed;
+
+                if (bugYpos > canvas.height) { // get barrel once leave bottom screen to go the top the screen
+                    bugYpos = 0 - BUG_SIZE; // set to top of screen
+                    bugXpos = Math.floor(Math.random() * ((canvas.width - BUG_SIZE) - 0) + 0);
+                    console.log('hh')
+                }
+                if (bugYpos + BUG_SIZE > shooterYpos && bugYpos < shooterYpos < SHOOTER_SIZE && bugXpos + BUG_SIZE > shooterXpos && bugXpos < shooterXpos + SHOOTER_SIZE) {// resets the barrel
+                    bugYpos = 0 - BUG_SIZE; //resets if touching shooter
+                    bugXpos = Math.floor(Math.random() * ((canvas.width - BUG_SIZE) - 0) + 0);
+                    health--; // health gets lower if touching barrel
+                }
+            }// end of bug movement func           all the movement for the barrel
+
+            function shooterMove() {
+                if (rightKeyPressed && shooterXpos < canvas.width - SHOOTER_SIZE) { //movement for shooter
+                    shooterXpos += shooterXspeed;
+                }
+
+                if (leftKeyPressed && shooterXpos > 0) {
+                    shooterXpos -= shooterXspeed;
+                }
+            } // end of shooter movement code          all of the movement for the shooter
+
+            var shot = false;
+            var shooting = false;
+            function bulletMove() {
+                if(shot && shooting == false){
+                    bulletXpos = shooterXpos;
+                    bulletYpos = shooterYpos;
+                    shooting = true;
+                    shot = false;
+                }
+                
+                if(shooting){
+                   bulletYpos -= bulletYspeed;
+                    if(bulletYpos < 0){
+                       bulletYpos = 0 - bulletSize;
+                        shooting = false;
+                    }
+                    
+                    // collision here
+                    
+                }
+            } // end of bullet movement func    what the bullket dose
+
+            function drawImg(img, x, y, w, h) {
+                canvasContext.drawImage(img, x, y, w, h);
+            }// end of this func
+
+            function colorRect(x, y, w, h, c) {
+                canvasContext.fillStyle = c;
+                canvasContext.fillRect(x, y, w, h);
+            }// end of color rect func
+
+            function colorText(msg, x, y, f, c) {
+                canvasContext.fillStyle = c;
+                canvasContext.font = f; // '20px Arial
+                canvasContext.fillText(msg, x, y);
+            } //end of color text func
 
     </script>
 </body>
